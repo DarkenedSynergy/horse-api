@@ -24,14 +24,14 @@ exports.getUserById = async (req, res) => {
 
 // Voeg een nieuwe gebruiker toe
 exports.createUser = async (req, res) => {
-    const { firstName, lastName, age } = req.body;
+    const { firstName, lastName, age, phone } = req.body;
 
-    if (!firstName || !lastName || age === undefined) {
+    if (!firstName || !lastName || age === undefined || !phone) {
         return res.status(400).json({ message: 'All fields are required' });
     }
 
     try {
-        const newUser = new User({ firstName, lastName, age });
+        const newUser = new User({ firstName, lastName, age, phone });
         await newUser.save();
         res.status(201).json(newUser);
     } catch (error) {
@@ -41,12 +41,12 @@ exports.createUser = async (req, res) => {
 
 // Update een bestaande gebruiker
 exports.updateUser = async (req, res) => {
-    const { firstName, lastName, age } = req.body;
+    const { firstName, lastName, age, phone } = req.body;
 
     try {
         const user = await User.findByIdAndUpdate(
             req.params.id,
-            { firstName, lastName, age },
+            { firstName, lastName, age, phone },
             { new: true, runValidators: true }
         );
 

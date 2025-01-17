@@ -79,3 +79,46 @@ exports.bulkInsertHorses = async (req, res) => {
       res.status(500).json({ message: error.message });
     }
   };
+
+  // Zoek paarden op basis van een zoekterm
+  exports.searchHorses = async (req, res) => {
+    const { breed, minAge, maxAge } = req.query;
+  
+    const query = {};
+    if (breed) query.breed = breed;
+    if (minAge) query.age = { $gte: minAge };
+    if (maxAge) query.age = { ...query.age, $lte: maxAge };
+  
+    try {
+      const horses = await Horse.find(query);
+      res.json(horses);
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  };
+
+    // Update de beschikbaarheid van een paard
+    exports.updateAvailability = async (req, res) => {
+        const { id } = req.params;
+        const { isAvailable } = req.body;
+    
+        if (typeof isAvailable !== 'boolean') {
+            return res.status(400).json({ message: 'isAvailable moet een boolean zijn.' });
+        }
+    
+        try {
+            const horse = await Horse.findByIdAndUpdate(
+                id,
+                { isAvailable },
+                { new: true } // Retourneer het bijgewerkte document
+            );
+    
+            if (!horse) {
+                return res.status(404).json({ message: 'Paard niet gevonden.' });
+            }
+    
+            res.json(horse);
+        } catch (error) {
+            res.status(500).json({ message: 'Fout bij het bijwerken van beschikbaarheid.', error });
+        }
+    };

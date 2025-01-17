@@ -6,36 +6,71 @@
   <title>Horse API Documentatie</title>
 </head>
 <body>
-  <h1>Horse API Documentatie</h1>
-  <p>Welkom bij de Horse API! Met deze API kun je gegevens van paarden en gebruikers beheren, inclusief het toevoegen van meerdere records in één verzoek.</p>
+<h1>Horse API Documentatie</h1>
+<p>Welkom bij de Horse API! Met deze API kun je gegevens van paarden, gebruikers en races beheren, inclusief het toevoegen van meerdere records in één verzoek.</p>
 
-  <h2>Beschikbare Endpoints</h2>
+<h2>Beschikbare Endpoints</h2>
 
-  <h3>Paarden</h3>
-  <ul>
-    <li><strong>GET /horses</strong>: Haal een lijst op van alle paarden.</li>
-    <li><strong>GET /horses/:id</strong>: Haal de details op van een specifiek paard.</li>
-    <li><strong>POST /horses</strong>: Voeg een nieuw paard toe.</li>
-    <li><strong>PUT /horses/:id</strong>: Werk een bestaand paard bij.</li>
-    <li><strong>DELETE /horses/:id</strong>: Verwijder een paard.</li>
-    <li><strong>POST /horses/bulk</strong>: Voeg meerdere paarden tegelijk toe.</li>
-  </ul>
+<h3>Paarden</h3>
+<ul>
+  <li><strong>GET /horses</strong>: Haal een lijst op van alle paarden. Ondersteunt sorteren met <code>?sortBy</code> en <code>?order</code>.</li>
+  <li><strong>GET /horses/search</strong>: Zoek paarden op meerdere velden (bijv. <code>breed</code>, <code>minAge</code>, <code>maxAge</code>).</li>
+  <li><strong>GET /horses/:id</strong>: Haal de details op van een specifiek paard.</li>
+  <li><strong>POST /horses</strong>: Voeg een nieuw paard toe.</li>
+  <li><strong>PUT /horses/:id</strong>: Werk een bestaand paard bij.</li>
+  <li><strong>DELETE /horses/:id</strong>: Verwijder een paard.</li>
+  <li><strong>POST /horses/bulk</strong>: Voeg meerdere paarden tegelijk toe.</li>
+  <li><strong>PATCH /horses/:id/availability</strong>: Update de beschikbaarheid van een paard.</li>
+</ul>
 
-  <h3>Gebruikers</h3>
-  <ul>
-    <li><strong>GET /users</strong>: Haal een lijst op van alle gebruikers.</li>
-    <li><strong>GET /users/:id</strong>: Haal de details op van een specifieke gebruiker.</li>
-    <li><strong>POST /users</strong>: Voeg een nieuwe gebruiker toe.</li>
-    <li><strong>PUT /users/:id</strong>: Werk een bestaande gebruiker bij.</li>
-    <li><strong>DELETE /users/:id</strong>: Verwijder een gebruiker.</li>
-    <li><strong>POST /users/bulk</strong>: Voeg meerdere gebruikers tegelijk toe.</li>
-  </ul>
+<h3>Gebruikers</h3>
+<ul>
+  <li><strong>GET /users</strong>: Haal een lijst op van alle gebruikers.</li>
+  <li><strong>GET /users/:id</strong>: Haal de details op van een specifieke gebruiker.</li>
+  <li><strong>POST /users</strong>: Voeg een nieuwe gebruiker toe.</li>
+  <li><strong>PUT /users/:id</strong>: Werk een bestaande gebruiker bij.</li>
+  <li><strong>DELETE /users/:id</strong>: Verwijder een gebruiker.</li>
+  <li><strong>POST /users/bulk</strong>: Voeg meerdere gebruikers tegelijk toe.</li>
+</ul>
 
-  <h2>Voorbeelden van Verzoeken en Reacties</h2>
-  
-  <h3>POST /horses/bulk</h3>
-  <p>Voeg meerdere paarden toe door het volgende verzoek in te sturen:</p>
-  <pre>
+<h3>Races</h3>
+<ul>
+  <li><strong>GET /races</strong>: Haal een lijst op van alle races.</li>
+  <li><strong>POST /races</strong>: Voeg een nieuwe race toe. Controleert dat <code>end_date</code> na <code>start_date</code> ligt.</li>
+  <li><strong>DELETE /races/clear</strong>: Verwijder alle races.</li>
+</ul>
+
+<h2>Voorbeelden van Verzoeken en Reacties</h2>
+
+<h3>POST /users/bulk</h3>
+<p>Voeg een gebruiker toe door het volgende verzoek in te sturen:</p>
+<pre>
+[
+{
+  "firstName": "John",
+  "lastName": "Doe",
+  "age": 30,
+  "phone": "+32 123 45 67 89"
+}
+]
+</pre>
+<p>De reactie bevat de ingevoegde gebruiker:</p>
+<pre>
+[
+  {
+    "_id": "64b6fcdaef34fa456789abcd",
+    "firstName": "John",
+    "lastName": "Doe",
+    "age": 30,
+    "phone": "+32 123 45 67 89",
+    "__v": 0
+  }
+]
+</pre>
+
+<h3>POST /horses/bulk</h3>
+<p>Voeg meerdere paarden toe door het volgende verzoek in te sturen:</p>
+<pre>
 [
   {
     "name": "Thunder",
@@ -56,9 +91,9 @@
     "isAvailable": true
   }
 ]
-  </pre>
-  <p>De reactie bevat een lijst van de ingevoegde paarden:</p>
-  <pre>
+</pre>
+<p>De reactie bevat een lijst van de ingevoegde paarden:</p>
+<pre>
 [
   {
     "_id": "64b6fcdaef34fa456789abcd",
@@ -85,13 +120,94 @@
     "__v": 0
   }
 ]
-  </pre>
+</pre>
 
-  <h2>Foutcodes</h2>
-  <ul>
-    <li><strong>400 Bad Request</strong>: Onvolledige of ongeldige gegevens in het verzoek.</li>
-    <li><strong>404 Not Found</strong>: Het opgegeven paard of de gebruiker is niet gevonden.</li>
-    <li><strong>500 Internal Server Error</strong>: Er is een fout opgetreden op de server.</li>
-  </ul>
+<h3>GET /horses/search?breed=Arabian&minAge=3&maxAge=7</h3>
+<p>Zoek naar paarden met het ras "Arabian" en leeftijd tussen 3 en 7:</p>
+<pre>
+[
+  {
+    "_id": "64b6fcdaef34fa456789abcd",
+    "name": "Thunder",
+    "age": 5,
+    "breed": "Arabian",
+    "isAvailable": true,
+    "__v": 0
+  }
+]
+</pre>
+
+<h3>GET /horses?sortBy=age&order=desc</h3>
+<p>Haal een lijst op van alle paarden, gesorteerd op leeftijd (aflopend):</p>
+<pre>
+[
+  {
+    "_id": "64b6fcdaef34fa456789abcd",
+    "name": "Lightning",
+    "age": 7,
+    "breed": "Thoroughbred",
+    "isAvailable": false,
+    "__v": 0
+  },
+  {
+    "_id": "64b6fcdaef34fa456789dcba",
+    "name": "Thunder",
+    "age": 5,
+    "breed": "Arabian",
+    "isAvailable": true,
+    "__v": 0
+  }
+]
+</pre>
+
+<h3>PATCH /horses/:id/availability</h3>
+<p>Update de beschikbaarheid van een paard:</p>
+<pre>
+PATCH http://localhost:3000/horses/64b6fcdaef34fa456789abcd/availability
+</pre>
+<p><strong>Body:</strong></p>
+<pre>
+{
+  "isAvailable": false
+}
+</pre>
+<p><strong>Reactie:</strong></p>
+<pre>
+{
+  "_id": "64b6fcdaef34fa456789abcd",
+  "name": "Thunder",
+  "age": 5,
+  "breed": "Arabian",
+  "isAvailable": false,
+  "__v": 0
+}
+</pre>
+
+<h3>POST /races</h3>
+<p>Voeg een nieuwe race toe:</p>
+<pre>
+{
+  "name": "Spring Derby",
+  "start_date": "2025-06-01",
+  "end_date": "2025-06-05"
+}
+</pre>
+<p>Reactie:</p>
+<pre>
+{
+  "_id": "64b6fcdaef34fa456789abcd",
+  "name": "Spring Derby",
+  "start_date": "2025-06-01T00:00:00.000Z",
+  "end_date": "2025-06-05T00:00:00.000Z",
+  "__v": 0
+}
+</pre>
+
+<h2>Foutcodes</h2>
+<ul>
+  <li><strong>400 Bad Request</strong>: Onvolledige of ongeldige gegevens in het verzoek.</li>
+  <li><strong>404 Not Found</strong>: Het opgegeven paard, de gebruiker, of de race is niet gevonden.</li>
+  <li><strong>500 Internal Server Error</strong>: Er is een fout opgetreden op de server.</li>
+</ul>
 </body>
 </html>

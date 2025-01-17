@@ -4,6 +4,7 @@ const connectDB = require('./config/database');
 
 const userRoutes = require('./routes/users'); // Routes voor users
 const horseRoutes = require('./routes/horses'); // Routes voor horses
+const raceRoutes = require('./routes/races'); // Routes voor races
 
 const app = express();
 
@@ -22,6 +23,7 @@ app.get('/', (req, res) => {
 // API-routes
 app.use('/users', userRoutes);
 app.use('/horses', horseRoutes);
+app.use('/races', raceRoutes);
 
 // Bulk insert support voor users en horses
 app.post('/users/bulk', async (req, res) => {
