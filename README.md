@@ -40,6 +40,7 @@ Zorg dat Express.js en andere benodigde pakketten worden geïnstalleerd:
 Gebruik `npm` om alle benodigde pakketten te installeren:
 ```bash
 npm install
+npm install dotenv
 ```
 
 ### 4. **Start de Applicatie**
