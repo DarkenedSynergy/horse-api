@@ -57,7 +57,7 @@ De server draait nu op `http://localhost:3000`.
 Gebruik een API-testtool zoals **Thunder Client** (in Visual Studio Code) of **Postman** om de endpoints te testen.
 
 ### Beschikbare Endpoints
-Zie de [documentatiepagina](http://localhost:3000) voor een volledig overzicht van beschikbare endpoints, inclusief voorbeeldverzoeken en reacties hierop.
+Zie de [documentatiepagina](http://localhost:3000) voor een volledig overzicht van beschikbare endpoints, inclusief voorbeeldverzoeken en reacties.
 
 ---
 
